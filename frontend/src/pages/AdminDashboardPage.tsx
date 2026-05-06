@@ -13,6 +13,7 @@ import {
     Clock
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 const AdminDashboardPage: React.FC = () => {
     const [stats, setStats] = useState<any>(null);
@@ -36,7 +37,7 @@ const AdminDashboardPage: React.FC = () => {
                 setUsers(usersRes.data);
             }
         } catch (error) {
-            console.error('Error fetching admin data:', error);
+            toast.error('Failed to fetch intelligence data');
         } finally {
             setLoading(false);
         }
@@ -49,9 +50,10 @@ const AdminDashboardPage: React.FC = () => {
     const handleToggleStatus = async (userId: number, currentStatus: boolean) => {
         try {
             await toggleUserStatus(userId, !currentStatus);
+            toast.success(`User access ${!currentStatus ? 'restored' : 'suspended'} successfully`);
             fetchData();
         } catch (error) {
-            console.error('Error toggling status:', error);
+            toast.error('Failed to update user status');
         }
     };
 

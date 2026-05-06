@@ -4,6 +4,7 @@ import { login } from '../services/authService';
 import { Shield, Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getDeviceFingerprint } from '../utils/fingerprint';
+import { toast } from 'sonner';
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -22,7 +23,9 @@ const LoginPage: React.FC = () => {
             const result = await login({ email, password, fingerprint });
 
             if (result.success) {
+                toast.success('Authentication successful');
                 if (result.mfaRequired) {
+                    toast.info('Verification required: Check your email');
                     // Store partial data for MFA step
                     localStorage.setItem('mfa_user_id', result.data.userId);
                     localStorage.setItem('mfa_email', result.data.email);
@@ -34,13 +37,19 @@ const LoginPage: React.FC = () => {
                     navigate('/dashboard');
                 }
             } else {
-                setError(result.message || 'Login failed');
+                const msg = result.message || 'Login failed';
+                setError(msg);
+                toast.error(msg);
                 if (result.riskLevel === 'HIGH') {
-                    setError(`Security Block: ${result.message}. Reason: ${result.factors?.join(', ')}`);
+                    toast.warning(`Security Block: ${result.message}`, {
+                        description: `Factors: ${result.factors?.join(', ')}`
+                    });
                 }
             }
         } catch (err: any) {
-            setError(err.response?.data?.message || 'An error occurred during login');
+            const msg = err.response?.data?.message || 'An error occurred during login';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }

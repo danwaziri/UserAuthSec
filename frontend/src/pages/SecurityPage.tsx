@@ -11,6 +11,7 @@ import {
     Info
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 const SecurityPage: React.FC = () => {
     const user = getCurrentUser();
@@ -26,7 +27,7 @@ const SecurityPage: React.FC = () => {
                     setHistory(res.data);
                 }
             } catch (error) {
-                console.error('Error fetching security history:', error);
+                toast.error('Failed to load security history');
             } finally {
                 setLoading(false);
             }
@@ -40,13 +41,14 @@ const SecurityPage: React.FC = () => {
             const res = await toggleMFA(nextState);
             if (res.success) {
                 setMfaEnabled(nextState);
+                toast.success(`MFA ${nextState ? 'enabled' : 'disabled'} successfully`);
                 // Update local storage user if needed
                 const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
                 currentUser.mfa_enabled = nextState;
                 localStorage.setItem('user', JSON.stringify(currentUser));
             }
         } catch (error) {
-            console.error('Error toggling MFA:', error);
+            toast.error('Failed to update MFA settings');
         }
     };
 

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../services/authService';
 import { Shield, User, Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 const RegisterPage: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -29,7 +30,9 @@ const RegisterPage: React.FC = () => {
         setError('');
 
         if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
+            const msg = 'Passwords do not match';
+            setError(msg);
+            toast.error(msg);
             setLoading(false);
             return;
         }
@@ -42,13 +45,18 @@ const RegisterPage: React.FC = () => {
             });
 
             if (result.success) {
+                toast.success('Registration successful!');
                 setSuccess(true);
                 setTimeout(() => navigate('/login'), 2000);
             } else {
-                setError(result.message || 'Registration failed');
+                const msg = result.message || 'Registration failed';
+                setError(msg);
+                toast.error(msg);
             }
         } catch (err: any) {
-            setError(err.response?.data?.message || 'An error occurred during registration');
+            const msg = err.response?.data?.message || 'An error occurred during registration';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }

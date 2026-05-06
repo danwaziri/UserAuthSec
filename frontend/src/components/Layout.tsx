@@ -13,6 +13,8 @@ import {
     Bell
 } from 'lucide-react';
 
+import { toast } from 'sonner';
+
 interface LayoutProps {
     children: React.ReactNode;
 }
@@ -24,12 +26,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
     const handleLogout = () => {
         logout();
+        toast.success('Logged out successfully');
         navigate('/login');
     };
 
     const handleLogoutAll = async () => {
         if (window.confirm('This will log you out from ALL devices. Continue?')) {
             await logoutAll();
+            toast.success('Logged out from all devices');
             navigate('/login');
         }
     };
@@ -123,10 +127,28 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         </p>
                     </div>
                     <div style={{ display: 'flex', gap: '16px' }}>
-                        <button style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(30, 41, 59, 0.7)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                        <button 
+                            onClick={() => toast.info('Notification system coming soon!')}
+                            style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(30, 41, 59, 0.7)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                        >
                             <Bell size={20} color="var(--text-muted)" />
                         </button>
-                        <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700' }}>
+                        <div 
+                            onClick={() => navigate('/profile')}
+                            style={{ 
+                                width: '48px', 
+                                height: '48px', 
+                                borderRadius: '12px', 
+                                background: 'linear-gradient(135deg, var(--primary), var(--secondary))', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                fontWeight: '700',
+                                cursor: 'pointer',
+                                transition: 'transform 0.2s ease'
+                            }}
+                            className="avatar-hover"
+                        >
                             {user?.full_name?.[0] || 'U'}
                         </div>
                     </div>

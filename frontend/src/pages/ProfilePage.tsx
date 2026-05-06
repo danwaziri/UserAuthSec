@@ -74,7 +74,13 @@ const ProfilePage: React.FC = () => {
                     </div>
 
                     <div style={{ marginTop: '40px', paddingTop: '40px', borderTop: '1px solid var(--border)' }}>
-                        <button className="btn-primary" style={{ padding: '12px 32px' }}>Edit Profile</button>
+                        <button 
+                            className="btn-primary" 
+                            style={{ padding: '12px 32px' }}
+                            onClick={() => alert('Profile editing coming soon!')}
+                        >
+                            Edit Profile
+                        </button>
                     </div>
                 </div>
             </div>
